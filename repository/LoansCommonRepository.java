@@ -12,9 +12,13 @@ import com.smoothstack.lms.common.model.Loans;
 
 public interface LoansCommonRepository extends JpaRepository<Loans, Long> {
 
-	List<Loans> findAllByBorrower(Borrower borrower);
+    List<Loans> findAllByBorrower(Borrower borrower);
 
-	List<Loans> findAllByBorrowerAndBook(Borrower borrower, Book book);
+    boolean existsByBook(Book book);
+
+    boolean existsByBorrower(Borrower borrower);
+
+    boolean existsByBranch(Branch branch);
 
 	Optional<Loans> findAllByBorrowerAndBranchAndBook(Borrower borrower, Branch branch, Book book);
 }

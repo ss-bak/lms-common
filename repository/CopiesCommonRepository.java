@@ -10,8 +10,13 @@ import com.smoothstack.lms.common.model.Branch;
 import com.smoothstack.lms.common.model.Copies;
 
 public interface CopiesCommonRepository extends JpaRepository<Copies, Long> {
+  
+    boolean existsByBook(Book book);
+    boolean existsByBranch(Branch branch);
 
-	List<Copies> findAllByBranchAndCopiesAmountGreaterThanEqual(Branch branch, int minimumNoOfCopies);
+    void deleteAllByBook(Book book);
 
-	Optional<Copies> findAllByBookAndBranchAndCopiesAmountGreaterThanEqual(Book book, Branch branch, int copiesAmount);
+    List<Copies> findAllByBranchAndCopiesAmountGreaterThanEqual(Branch branch, int minimumNoOfCopies);
+
+    Optional<Copies> findAllByBookAndBranchAndCopiesAmountGreaterThanEqual(Book book, Branch branch, int minimumNoOfCopies);
 }

@@ -1,7 +1,10 @@
 package com.smoothstack.lms.common.service;
 
+import com.smoothstack.lms.common.exception.DependencyException;
 import com.smoothstack.lms.common.model.Book;
 import com.smoothstack.lms.common.repository.BookCommonRepository;
+import com.smoothstack.lms.common.repository.CopiesCommonRepository;
+import com.smoothstack.lms.common.repository.LoansCommonRepository;
 import com.smoothstack.lms.common.repository.RepositoryAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,6 +57,13 @@ public class BookCommonService implements CommonService<Book, Long> {
 
     @Override
     public boolean beforeDelete(Book book) {
+
+        if (((LoansCommonRepository) RepositoryAdapter.getLoansRepository()).existsByBook(book)) {
+            throw new DependencyException("Cannot delete book, must return all book before deletion.");
+        }
+
+        ((CopiesCommonRepository) RepositoryAdapter.getCopiesRepository()).deleteAllByBook(book);
+
         book.getBookAuthorSet().forEach(author -> {
             author.getAuthorBookSet().remove(book);
             RepositoryAdapter.getAuthorRepository().save(author);
