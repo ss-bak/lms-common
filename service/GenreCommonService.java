@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.Validator;
 
-public class GenreCommonService implements CommonService<Genre, Long> {
+public abstract class GenreCommonService implements CommonService<Genre, Long> {
 
 
     private GenreCommonRepository authorCommonRepository;

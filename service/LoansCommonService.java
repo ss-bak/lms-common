@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.Validator;
 
-public class LoansCommonService implements CommonService<Loans, Long> {
+public abstract class LoansCommonService implements CommonService<Loans, Long> {
 
 
     private LoansCommonRepository authorCommonRepository;

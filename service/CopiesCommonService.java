@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import javax.validation.Validator;
 import java.util.Optional;
 
-public class CopiesCommonService implements CommonService<Copies, Long> {
+public abstract class CopiesCommonService implements CommonService<Copies, Long> {
 
 
     private CopiesCommonRepository copiesCommonRepository;

@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import javax.validation.Validator;
 
-public class PublisherCommonService implements CommonService<Publisher, Long> {
+public abstract class PublisherCommonService implements CommonService<Publisher, Long> {
 
 
     private PublisherCommonRepository authorCommonRepository;
