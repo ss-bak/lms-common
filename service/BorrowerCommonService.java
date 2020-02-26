@@ -34,4 +34,6 @@ public class BorrowerCommonService implements CommonService<Borrower, Long> {
     public JpaRepository<Borrower, Long> getJpaRepository() {
         return authorCommonRepository;
     }
+
+
 }
