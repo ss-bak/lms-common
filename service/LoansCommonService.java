@@ -1,5 +1,6 @@
 package com.smoothstack.lms.common.service;
 
+import com.smoothstack.lms.common.exception.DependencyException;
 import com.smoothstack.lms.common.model.Loans;
 import com.smoothstack.lms.common.repository.LoansCommonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,14 @@ public class LoansCommonService implements CommonService<Loans, Long> {
     @Override
     public JpaRepository<Loans, Long> getJpaRepository() {
         return authorCommonRepository;
+    }
+
+    @Override
+    public boolean beforeDelete(Loans loans) {
+        if (null == loans.getLoanDateIn())
+            throw new DependencyException("Book must be return (dateIn is not null) before deletion");
+
+        return true;
     }
 }
 

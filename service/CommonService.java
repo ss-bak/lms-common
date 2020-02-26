@@ -19,12 +19,12 @@ public interface CommonService<T, ID> {
         return getJpaRepository().findAll();
     };
 
-    default Optional<T> findById(ID id)  {
-        return getJpaRepository().findById(id);
+    default Optional<T> findById(ID... ids)  {
+        return getJpaRepository().findById(ids[0]);
     };
 
-    default T findByIdOrThrow(ID id){
-        return findById(id).orElseThrow(RecordNotFoundException::new);
+    default T findByIdOrThrow(ID... ids){
+        return findById(ids).orElseThrow(RecordNotFoundException::new);
     };
 
     default boolean beforeSave(T object) {return true;};
