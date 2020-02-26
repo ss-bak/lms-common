@@ -39,8 +39,7 @@ public class CopiesCommonService implements CommonService<Copies, Long> {
         return copiesCommonRepository;
     }
 
-
-
+    @Override
     public Optional<Copies> findById(Long... id)  {
         if (id.length < 2)
             throw new IllegalArgumentException("Need two ids");
