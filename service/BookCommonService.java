@@ -7,11 +7,13 @@ import com.smoothstack.lms.common.repository.RepositoryAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Validator;
 
+@Service
 public abstract class BookCommonService implements CommonService<Book, Long> {
 
     @PersistenceContext
@@ -48,8 +50,7 @@ public abstract class BookCommonService implements CommonService<Book, Long> {
                     && author.getAuthorId() != 0
                     && !entityManager.contains(author)) {
 
-                    entityManager.merge(author);
-                    entityManager.flush();
+                RepositoryAdapter.getAuthorRepository().save(author);
             }
         });
 
@@ -58,14 +59,13 @@ public abstract class BookCommonService implements CommonService<Book, Long> {
                     && book.getPublisher().getPublisherId() != 0
                     && !entityManager.contains(book.getPublisher())) {
 
-                entityManager.merge(book.getPublisher());
-                entityManager.flush();
+                RepositoryAdapter.getPublisherRepository().save(book.getPublisher());
         }
 
         book.getBookGenreSet().forEach(genre -> {
             if (genre != null && genre.getGenreId() != 0 && !entityManager.contains(genre)) {
-                    entityManager.merge(genre);
-                    entityManager.flush();
+
+                RepositoryAdapter.getGenreRepository().save(genre);
             }
         });
 
