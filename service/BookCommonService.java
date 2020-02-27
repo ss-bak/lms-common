@@ -43,13 +43,13 @@ public abstract class BookCommonService implements CommonService<Book, Long> {
 
     @Override
     public boolean beforeSave(Book book) {
-
         book.getBookAuthorSet().forEach(author -> {
             if (author != null
                     && author.getAuthorId() != 0
                     && !entityManager.contains(author)) {
 
                     entityManager.merge(author);
+                    entityManager.flush();
             }
         });
 
@@ -59,11 +59,13 @@ public abstract class BookCommonService implements CommonService<Book, Long> {
                     && !entityManager.contains(book.getPublisher())) {
 
                 entityManager.merge(book.getPublisher());
+                entityManager.flush();
         }
 
         book.getBookGenreSet().forEach(genre -> {
             if (genre != null && genre.getGenreId() != 0 && !entityManager.contains(genre)) {
                     entityManager.merge(genre);
+                    entityManager.flush();
             }
         });
 
