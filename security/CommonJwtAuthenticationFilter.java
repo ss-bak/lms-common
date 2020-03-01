@@ -6,25 +6,28 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class CommonJwtAuthenticationFilter extends OncePerRequestFilter {
+public class CommonJwtAuthenticationFilter extends GenericFilterBean {
 
 
     @Autowired
     private CommonIdentityTenantService commonIdentityTenantService;
 
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String requestTokenHeader = request.getHeader("Authorization");
+        logger.info("CommonJwtAuthenticationFilter");
+        final String requestTokenHeader = ((HttpServletRequest) request).getHeader("Authorization");
         String jwt = null;
 
         if (requestTokenHeader == null || !requestTokenHeader.startsWith("Bearer ")) {
@@ -46,7 +49,7 @@ public class CommonJwtAuthenticationFilter extends OncePerRequestFilter {
                                     userDetails.getAuthorities());
 
                     usernamePasswordAuthenticationToken
-                            .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                            .setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) request));
 
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
@@ -54,6 +57,6 @@ public class CommonJwtAuthenticationFilter extends OncePerRequestFilter {
                 logger.info("Security Context Authentication is not null");
             }
         }
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
 }
