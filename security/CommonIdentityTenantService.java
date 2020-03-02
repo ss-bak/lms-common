@@ -41,29 +41,33 @@ public class CommonIdentityTenantService {
     Environment environment;
 
     public UserDetails getUserDetailsByJwt(String jwt) {
+        ResponseEntity<String> response = null;
+        try {
+            HttpHeaders httpHeaders = new HttpHeaders();
 
-        HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Proxy-Authorization", String.format("JWT %s", jwt));
 
-        httpHeaders.set("Proxy-Authorization", String.format("JWT %s",jwt));
+            // Content negotiation -> Accept: application/json
+            httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
-        // Content negotiation -> Accept: application/json
-        httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+            HttpEntity headerEntity = new HttpEntity(httpHeaders);
 
-        HttpEntity headerEntity = new HttpEntity(httpHeaders);
+            String url = String.format("http://%s:%s/%s",
+                    identityProviderUrlHost,
+                    0 == (identityProviderUrlPort) ?
+                            (environment.getProperty("local.server.port"))
+                            : String.valueOf(identityProviderUrlPort),
+                    identityProviderUrlPath
+            );
 
-        String url = String.format("http://%s:%s/%s",
-                identityProviderUrlHost,
-                0 == (identityProviderUrlPort)?
-                        (environment.getProperty("local.server.port"))
-                        :String.valueOf(identityProviderUrlPort),
-                identityProviderUrlPath
-                );
-
-        ResponseEntity<String> response =  restTemplate.exchange(url,
-                HttpMethod.GET, headerEntity, String.class);
-
+            response = restTemplate.exchange(url,
+                    HttpMethod.GET, headerEntity, String.class);
+        }
+        catch (Exception e) { //TODO: Proper Exception try-catch
+            throw new UsernameNotFoundException("Using JWT - Identity Provider failed.");
+        }
         if (!response.getStatusCode().equals(HttpStatus.OK) || !response.hasBody() || response.getBody() == null)
-            throw new UsernameNotFoundException("Using JWT - IdentityManager return empty response");
+            throw new UsernameNotFoundException("Using JWT - Identity Provider return empty response");
 
 
         try {
@@ -86,7 +90,7 @@ public class CommonIdentityTenantService {
             Debug.println(userBuilder.build().toString());
             return userBuilder.build();
         } catch (JsonProcessingException e) {
-            throw new UsernameNotFoundException("Using JWT - IdentityManager return invalid response\n"+response.getBody());
+            throw new UsernameNotFoundException("Using JWT - Identity Provider return invalid response\n"+response.getBody());
         } catch (IOException e) {
             throw new UsernameNotFoundException("Using JWT - parser failed!");
         }
