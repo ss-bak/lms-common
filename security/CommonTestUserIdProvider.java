@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class CommonAnonymousIdProvider {
+public class CommonTestUserIdProvider {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -31,6 +31,7 @@ public class CommonAnonymousIdProvider {
         jwt = requestTokenHeader.substring(4);
         Debug.printf("JWT = %s\n",jwt);
 
+        String testRole = null;
         /* TODO:
                 1. Validate JWT
                 2. Get subject from JWT, this will be the username (or use JwtUtils)
@@ -40,9 +41,23 @@ public class CommonAnonymousIdProvider {
                 5. Return UserDetails to IdentityTenant
          */
 
-        User.UserBuilder userBuilder = User.withUsername("anonymous");
+        switch (jwt) {
+            case "BORROWER":
+                testRole = "BORROWER";
+                break;
+            case "LIBRARIAN":
+                testRole = "LIBRARIAN";
+                break;
+            case "ADMIN":
+                testRole = "ADMIN";
+                break;
+            default:
+                testRole = "GUEST";
+        }
+
+        User.UserBuilder userBuilder = User.withUsername("test");
         userBuilder.password(jwt);
-        userBuilder.roles("ANONYMOUS", "UNCONFIGURED");
+        userBuilder.roles("TEST_USER", "TEST_"+testRole);
         return ResponseEntity.ok().body(userBuilder.build());
     }
 

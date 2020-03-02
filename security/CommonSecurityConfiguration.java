@@ -8,11 +8,11 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.h2.console.enabled:false}")
@@ -21,29 +21,53 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${spring.h2.console.path:/h2-console}")
     private String h2ConsolePath;
 
-    @Autowired
-    private CommonJwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("u1").password("p1").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("u2").password("p2").roles("USER");
-        auth.inMemoryAuthentication().withUser("u3").password("p3").roles("USER");
+    private CommonJwtConfigurer jwtConfigurer;
 
+    @Autowired
+    private CommonJwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+       authenticationManagerBuilder
+               .inMemoryAuthentication().withUser("inmemory").password("password").roles("TEST_USER");
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
 
+        httpSecurity.apply(jwtConfigurer);
 
-        httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.csrf().disable();
+
+        httpSecurity.httpBasic().disable();
+
+        httpSecurity.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                .and().sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/security-test/admin/**").hasRole("TEST_ADMIN")
+                .antMatchers("/security-test/librarian/**").hasRole("TEST_LIBRARIAN")
+                .antMatchers("/security-test/borrower/**").hasRole("TEST_BORROWER");
+
+        httpSecurity
+                .authorizeRequests()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/librarian/**").hasRole("LIBRARIAN")
+                .antMatchers("/borrower/**").hasRole("BORROWER");
 
         httpSecurity.authorizeRequests()
                 .antMatchers(
-
-                        "/**"
+                        "/*/ping",
+                        "/*/port",
+                        "/identityprovider/**"
                 )
                 .permitAll();
+
+
 
         if (h2ConsoleEnabled) {
             httpSecurity.authorizeRequests().antMatchers(h2ConsolePath + "/**").permitAll();
@@ -52,44 +76,7 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             httpSecurity.headers().frameOptions().disable();
         }
-//
-//        httpSecurity.authorizeRequests()
-//                .antMatchers(
-//                        "/blogEntry/edit/**",
-//                        "/blogEntry/edit/process",
-//                        "/blogEntry/delete/**")
-//                .access("hasAnyRole('USER', 'ADMIN')");
 
-//        httpSecurity    .authorizeRequests()
-//                .anyRequest()
-//                .authenticated()
-//                .and()
-//                .formLogin();
-
-        httpSecurity.authorizeRequests()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .formLogin().permitAll();
-
-//        httpSecurity.authorizeRequests()
-//                .and()
-//                .exceptionHandling()
-//                .accessDeniedPage("/403");
-
-        httpSecurity.logout();
-
-
-//        http.authorizeRequests().and().formLogin()//
-//                // Submit URL of login page.
-//                .loginProcessingUrl("/j_spring_security_check") // Submit URL
-//                .loginPage("/login")//
-//                .defaultSuccessUrl("/userAccountInfo")//
-//                .failureUrl("/login?error=true")//
-//                .usernameParameter("username")//
-//                .passwordParameter("password")
-//                // Config for Logout Page
-//                .and().logout().logoutUrl("/logout").logoutSuccessUrl("/logoutSuccessful");
 
     }
 
