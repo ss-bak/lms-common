@@ -1,6 +1,6 @@
 package com.smoothstack.lms.common.security;
 
-import com.smoothstack.lms.borrowermicroservice.Debug;
+import com.smoothstack.lms.common.util.Debug;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
