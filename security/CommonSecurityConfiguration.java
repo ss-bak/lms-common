@@ -50,8 +50,8 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		httpSecurity.authorizeRequests().antMatchers("/security-test/admin/**").hasRole("TEST_ADMIN")
 				.antMatchers("/security-test/borrower/**").hasRole("TEST_BORROWER");
 
-		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/librarian/**")
-				.hasRole("LIBRARIAN").antMatchers("/borrower/**").hasRole("BORROWER");
+		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/borrower/**")
+				.hasRole("BORROWER");
 
 		httpSecurity.authorizeRequests().antMatchers("/*/ping", "/*/port", "/identityprovider/**").permitAll();
 
