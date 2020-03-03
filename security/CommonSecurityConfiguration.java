@@ -48,6 +48,7 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		httpSecurity.authorizeRequests().antMatchers("/security-test/admin/**").hasRole("TEST_ADMIN")
+				.antMatchers("/security-test/librarian/**").hasRole("TEST_LIBRARIAN")
 				.antMatchers("/security-test/borrower/**").hasRole("TEST_BORROWER");
 
 		httpSecurity.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN").antMatchers("/borrower/**")
