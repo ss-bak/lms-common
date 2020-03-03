@@ -3,12 +3,12 @@ package com.smoothstack.lms.common.repository;
 import com.smoothstack.lms.common.model.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@Component
+@Configuration
 public class RepositoryAdapter {
 
 	private AuthorCommonRepository authorCommonRepository;
@@ -29,45 +29,80 @@ public class RepositoryAdapter {
 	private static LoansCommonRepository loansRepository;
 	private static PublisherCommonRepository publisherRepository;
 
+
+
+	public AuthorCommonRepository getAuthorCommonRepository() {
+		return authorCommonRepository;
+	}
+
 	@Autowired
-	private void setAuthorCommonRepository(AuthorCommonRepository authorCommonRepository) {
+	public void setAuthorCommonRepository(AuthorCommonRepository authorCommonRepository) {
 		this.authorCommonRepository = authorCommonRepository;
 	}
 
+	public BookCommonRepository getBookCommonRepository() {
+		return bookCommonRepository;
+	}
+
 	@Autowired
-	private void setBookCommonRepository(BookCommonRepository bookCommonRepository) {
+	public void setBookCommonRepository(BookCommonRepository bookCommonRepository) {
 		this.bookCommonRepository = bookCommonRepository;
 	}
 
+	public BorrowerCommonRepository getBorrowerCommonRepository() {
+		return borrowerCommonRepository;
+	}
+
 	@Autowired
-	private void setBorrowerCommonRepository(BorrowerCommonRepository borrowerCommonRepository) {
+	public void setBorrowerCommonRepository(BorrowerCommonRepository borrowerCommonRepository) {
 		this.borrowerCommonRepository = borrowerCommonRepository;
 	}
 
+	public BranchCommonRepository getBranchCommonRepository() {
+		return branchCommonRepository;
+	}
+
 	@Autowired
-	private void setBranchCommonRepository(BranchCommonRepository branchCommonRepository) {
+	public void setBranchCommonRepository(BranchCommonRepository branchCommonRepository) {
 		this.branchCommonRepository = branchCommonRepository;
 	}
 
+	public CopiesCommonRepository getCopiesCommonRepository() {
+		return copiesCommonRepository;
+	}
+
 	@Autowired
-	private void setCopiesCommonRepository(CopiesCommonRepository copiesCommonRepository) {
+	public void setCopiesCommonRepository(CopiesCommonRepository copiesCommonRepository) {
 		this.copiesCommonRepository = copiesCommonRepository;
 	}
 
+	public GenreCommonRepository getGenreCommonRepository() {
+		return genreCommonRepository;
+	}
+
 	@Autowired
-	private void setGenreCommonRepository(GenreCommonRepository genreCommonRepository) {
+	public void setGenreCommonRepository(GenreCommonRepository genreCommonRepository) {
 		this.genreCommonRepository = genreCommonRepository;
 	}
 
-	@Autowired
-	private void setLoansCommonRepository(LoansCommonRepository loansCommonRepository) {
-		this.loansCommonRepository = loansCommonRepository;
+	public LoansCommonRepository getLoansCommonRepository() {
+		return loansCommonRepository;
 	}
 
 	@Autowired
-	private void setPublisherCommonRepository(PublisherCommonRepository publisherCommonRepository) {
+	public void setLoansCommonRepository(LoansCommonRepository loansCommonRepository) {
+		this.loansCommonRepository = loansCommonRepository;
+	}
+
+	public PublisherCommonRepository getPublisherCommonRepository() {
+		return publisherCommonRepository;
+	}
+
+	@Autowired
+	public void setPublisherCommonRepository(PublisherCommonRepository publisherCommonRepository) {
 		this.publisherCommonRepository = publisherCommonRepository;
 	}
+
 
 	public static AuthorCommonRepository getAuthorRepository() {
 		return authorRepository;
@@ -76,6 +111,7 @@ public class RepositoryAdapter {
 	public static void setAuthorRepository(AuthorCommonRepository authorRepository) {
 		RepositoryAdapter.authorRepository = authorRepository;
 	}
+
 
 	public static BookCommonRepository getBookRepository() {
 		return bookRepository;
@@ -93,6 +129,7 @@ public class RepositoryAdapter {
 		RepositoryAdapter.borrowerRepository = borrowerRepository;
 	}
 
+
 	public static BranchCommonRepository getBranchRepository() {
 		return branchRepository;
 	}
@@ -100,6 +137,7 @@ public class RepositoryAdapter {
 	public static void setBranchRepository(BranchCommonRepository branchRepository) {
 		RepositoryAdapter.branchRepository = branchRepository;
 	}
+
 
 	public static CopiesCommonRepository getCopiesRepository() {
 		return copiesRepository;
@@ -109,6 +147,7 @@ public class RepositoryAdapter {
 		RepositoryAdapter.copiesRepository = copiesRepository;
 	}
 
+
 	public static GenreCommonRepository getGenreRepository() {
 		return genreRepository;
 	}
@@ -117,6 +156,7 @@ public class RepositoryAdapter {
 		RepositoryAdapter.genreRepository = genreRepository;
 	}
 
+
 	public static LoansCommonRepository getLoansRepository() {
 		return loansRepository;
 	}
@@ -124,6 +164,7 @@ public class RepositoryAdapter {
 	public static void setLoansRepository(LoansCommonRepository loansRepository) {
 		RepositoryAdapter.loansRepository = loansRepository;
 	}
+
 
 	public static PublisherCommonRepository getPublisherRepository() {
 		return publisherRepository;
