@@ -45,6 +45,7 @@ public class CommonJwtAuthenticationFilter extends GenericFilterBean {
 				}
 
 				if (userDetails != null) {
+
 					UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
 							userDetails, null, userDetails.getAuthorities());
 

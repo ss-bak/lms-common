@@ -18,7 +18,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -26,6 +25,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.smoothstack.lms.common.util.Debug;
 
 @Service
 public class CommonIdentityTenantService {
@@ -46,34 +46,32 @@ public class CommonIdentityTenantService {
 	Environment environment;
 
 	public UserDetails getUserDetailsByJwt(String jwt) {
-
-		HttpHeaders httpHeaders = new HttpHeaders();
-
-		httpHeaders.set("Proxy-Authorization", String.format("JWT %s", jwt));
-
-		// Content negotiation -> Accept: application/json
-		httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-		HttpEntity headerEntity = new HttpEntity(httpHeaders);
-
-		String url = String.format("http://%s:%s/%s", identityProviderUrlHost,
-				0 == (identityProviderUrlPort) ? (environment.getProperty("local.server.port"))
-						: String.valueOf(identityProviderUrlPort),
-				identityProviderUrlPath);
-
 		ResponseEntity<String> response = null;
 		try {
-			response = restTemplate.exchange(url, HttpMethod.GET, headerEntity, String.class);
-		} catch (HttpClientErrorException e) {
-			throw new UsernameNotFoundException("Using JWT - malformed JWT");
-		}
+			HttpHeaders httpHeaders = new HttpHeaders();
 
+			httpHeaders.set("Proxy-Authorization", String.format("JWT %s", jwt));
+
+			// Content negotiation -> Accept: application/json
+			httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+			HttpEntity headerEntity = new HttpEntity(httpHeaders);
+
+			String url = String.format("http://%s:%s/%s", identityProviderUrlHost,
+					0 == (identityProviderUrlPort) ? (environment.getProperty("local.server.port"))
+							: String.valueOf(identityProviderUrlPort),
+					identityProviderUrlPath);
+
+			response = restTemplate.exchange(url, HttpMethod.GET, headerEntity, String.class);
+		} catch (Exception e) { // TODO: Proper Exception try-catch
+			throw new UsernameNotFoundException("Using JWT - Identity Provider failed.");
+		}
 		if (!response.getStatusCode().equals(HttpStatus.OK) || !response.hasBody() || response.getBody() == null)
-			throw new UsernameNotFoundException("Using JWT - IdentityManager return empty response");
+			throw new UsernameNotFoundException("Using JWT - Identity Provider return empty response");
 
 		try {
 
-			// Debug.println(response.getBody());
+			Debug.println(response.getBody());
 
 			ObjectMapper mapper = new ObjectMapper();
 			JsonFactory factory = mapper.getFactory();
@@ -86,11 +84,11 @@ public class CommonIdentityTenantService {
 			node.get("authorities").iterator().forEachRemaining(s -> authorities.add(s.get("authority").asText()));
 			userBuilder.authorities(authorities.toArray(new String[0]));
 
-			// Debug.println(userBuilder.build().toString());
+			Debug.println(userBuilder.build().toString());
 			return userBuilder.build();
 		} catch (JsonProcessingException e) {
 			throw new UsernameNotFoundException(
-					"Using JWT - IdentityManager return invalid response\n" + response.getBody());
+					"Using JWT - Identity Provider return invalid response\n" + response.getBody());
 		} catch (IOException e) {
 			throw new UsernameNotFoundException("Using JWT - parser failed!");
 		}

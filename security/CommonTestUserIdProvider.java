@@ -1,7 +1,6 @@
 package com.smoothstack.lms.common.security;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.smoothstack.lms.common.util.Debug;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 
-import com.ctc.wstx.shaded.msv_core.driver.textui.Debug;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class CommonTestUserIdProvider {
@@ -30,7 +29,7 @@ public class CommonTestUserIdProvider {
             return ResponseEntity.badRequest().body(requestTokenHeader == null?"<NULL>":request.getHeader("Proxy-Authorization"));
         }
         jwt = requestTokenHeader.substring(4);
-        //Debug.printf("JWT = %s\n",jwt);
+        Debug.printf("JWT = %s\n",jwt);
 
         String testRole = null;
         /* TODO:

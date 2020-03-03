@@ -1,20 +1,12 @@
 package com.smoothstack.lms.common.repository;
 
-import javax.annotation.PostConstruct;
-
+import com.smoothstack.lms.common.model.*;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
-import com.smoothstack.lms.common.model.Author;
-import com.smoothstack.lms.common.model.Book;
-import com.smoothstack.lms.common.model.Borrower;
-import com.smoothstack.lms.common.model.Branch;
-import com.smoothstack.lms.common.model.Copies;
-import com.smoothstack.lms.common.model.Genre;
-import com.smoothstack.lms.common.model.Loans;
-import com.smoothstack.lms.common.model.Publisher;
+import javax.annotation.PostConstruct;
 
 @Component
 public class RepositoryAdapter {
@@ -28,14 +20,14 @@ public class RepositoryAdapter {
 	private LoansCommonRepository loansCommonRepository;
 	private PublisherCommonRepository publisherCommonRepository;
 
-	private static JpaRepository<Author, Long> authorRepository;
-	private static JpaRepository<Book, Long> bookRepository;
-	private static JpaRepository<Borrower, Long> borrowerRepository;
-	private static JpaRepository<Branch, Long> branchRepository;
-	private static JpaRepository<Copies, Long> copiesRepository;
-	private static JpaRepository<Genre, Long> genreRepository;
-	private static JpaRepository<Loans, Long> loansRepository;
-	private static JpaRepository<Publisher, Long> publisherRepository;
+	private static AuthorCommonRepository authorRepository;
+	private static BookCommonRepository bookRepository;
+	private static BorrowerCommonRepository borrowerRepository;
+	private static BranchCommonRepository branchRepository;
+	private static CopiesCommonRepository copiesRepository;
+	private static GenreCommonRepository genreRepository;
+	private static LoansCommonRepository loansRepository;
+	private static PublisherCommonRepository publisherRepository;
 
 	@Autowired
 	private void setAuthorCommonRepository(AuthorCommonRepository authorCommonRepository) {
@@ -77,67 +69,67 @@ public class RepositoryAdapter {
 		this.publisherCommonRepository = publisherCommonRepository;
 	}
 
-	public static JpaRepository<Author, Long> getAuthorRepository() {
+	public static AuthorCommonRepository getAuthorRepository() {
 		return authorRepository;
 	}
 
-	public static void setAuthorRepository(JpaRepository<Author, Long> authorRepository) {
+	public static void setAuthorRepository(AuthorCommonRepository authorRepository) {
 		RepositoryAdapter.authorRepository = authorRepository;
 	}
 
-	public static JpaRepository<Book, Long> getBookRepository() {
+	public static BookCommonRepository getBookRepository() {
 		return bookRepository;
 	}
 
-	public static void setBookRepository(JpaRepository<Book, Long> bookRepository) {
+	public static void setBookRepository(BookCommonRepository bookRepository) {
 		RepositoryAdapter.bookRepository = bookRepository;
 	}
 
-	public static JpaRepository<Borrower, Long> getBorrowerRepository() {
+	public static BorrowerCommonRepository getBorrowerRepository() {
 		return borrowerRepository;
 	}
 
-	public static void setBorrowerRepository(JpaRepository<Borrower, Long> borrowerRepository) {
+	public static void setBorrowerRepository(BorrowerCommonRepository borrowerRepository) {
 		RepositoryAdapter.borrowerRepository = borrowerRepository;
 	}
 
-	public static JpaRepository<Branch, Long> getBranchRepository() {
+	public static BranchCommonRepository getBranchRepository() {
 		return branchRepository;
 	}
 
-	public static void setBranchRepository(JpaRepository<Branch, Long> branchRepository) {
+	public static void setBranchRepository(BranchCommonRepository branchRepository) {
 		RepositoryAdapter.branchRepository = branchRepository;
 	}
 
-	public static JpaRepository<Copies, Long> getCopiesRepository() {
+	public static CopiesCommonRepository getCopiesRepository() {
 		return copiesRepository;
 	}
 
-	public static void setCopiesRepository(JpaRepository<Copies, Long> copiesRepository) {
+	public static void setCopiesRepository(CopiesCommonRepository copiesRepository) {
 		RepositoryAdapter.copiesRepository = copiesRepository;
 	}
 
-	public static JpaRepository<Genre, Long> getGenreRepository() {
+	public static GenreCommonRepository getGenreRepository() {
 		return genreRepository;
 	}
 
-	public static void setGenreRepository(JpaRepository<Genre, Long> genreRepository) {
+	public static void setGenreRepository(GenreCommonRepository genreRepository) {
 		RepositoryAdapter.genreRepository = genreRepository;
 	}
 
-	public static JpaRepository<Loans, Long> getLoansRepository() {
+	public static LoansCommonRepository getLoansRepository() {
 		return loansRepository;
 	}
 
-	public static void setLoansRepository(JpaRepository<Loans, Long> loansRepository) {
+	public static void setLoansRepository(LoansCommonRepository loansRepository) {
 		RepositoryAdapter.loansRepository = loansRepository;
 	}
 
-	public static JpaRepository<Publisher, Long> getPublisherRepository() {
+	public static PublisherCommonRepository getPublisherRepository() {
 		return publisherRepository;
 	}
 
-	public static void setPublisherRepository(JpaRepository<Publisher, Long> publisherRepository) {
+	public static void setPublisherRepository(PublisherCommonRepository publisherRepository) {
 		RepositoryAdapter.publisherRepository = publisherRepository;
 	}
 
