@@ -38,6 +38,14 @@ public class Response {
         payload.getMeta().values().forEach(LoopTerminator::apply);
         return ResponseEntity.status(payload.getStatus()).body(payload);
     }
+
+    public static Response code(HttpStatus status) {
+        Response response = new Response();
+
+        response.getPayload().setStatus(status);
+
+        return response;
+    }
 }
 
 

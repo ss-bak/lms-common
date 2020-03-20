@@ -49,12 +49,15 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
         httpSecurity
                 .authorizeRequests()
+                .antMatchers("/security-test/administrator/**").hasRole("TEST_ADMIN")
                 .antMatchers("/security-test/admin/**").hasRole("TEST_ADMIN")
                 .antMatchers("/security-test/librarian/**").hasRole("TEST_LIBRARIAN")
-                .antMatchers("/security-test/borrower/**").hasRole("TEST_BORROWER");
+                .antMatchers("/security-test/borrower/**").hasRole("TEST_BORROWER")
+                .antMatchers("/security-test/**").permitAll();
 
         httpSecurity
                 .authorizeRequests()
+                .antMatchers("/administrator/**").hasRole("ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .antMatchers("/librarian/**").hasRole("LIBRARIAN")
                 .antMatchers("/borrower/**").hasRole("BORROWER");
@@ -67,8 +70,6 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 )
                 .permitAll();
 
-
-
         if (h2ConsoleEnabled) {
             httpSecurity.authorizeRequests().antMatchers(h2ConsolePath + "/**").permitAll();
 
@@ -77,6 +78,9 @@ public class CommonSecurityConfiguration extends WebSecurityConfigurerAdapter {
             httpSecurity.headers().frameOptions().disable();
         }
 
+        httpSecurity.authorizeRequests()
+                .anyRequest()
+                .denyAll();
 
     }
 
